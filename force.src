@@ -1,0 +1,61 @@
+print("<color=orange>Search metaxploit.so in /lib/metaxploit.so")
+metaxploit = include_lib("/lib/metaxploit.so")
+if not metaxploit then
+	print("<color=red>ERROR : metaxploit.so not found")
+	metaxploit = include_lib(home_dir+"/metaxploit.so")
+	print("<color=orange>Search metaxploit.so in "+home_dir+"/metaxploit.so")
+	if not metaxploit then
+		print("<color=red>ERROR : metaxploit.so not found")
+		exit()
+	end if
+end if
+
+random_ip = function()
+	f = range(0,255)
+	f.remove(192)
+	f.remove(191)
+	f.remove(0)
+	f.remove(10) 
+	f.remove(172)
+	f.remove(128)
+	f.remove(223)
+
+	o = range(0,255)
+	
+	ip = []
+	ip.push(floor(rnd() * f.len))
+	for i in range(2)
+		ip.push(floor(rnd() * o.len))
+	end for
+	ip = ip.join(".")
+
+	if is_valid_ip(ip) and get_router(ip) and get_shell.ping(ip) then
+		return ip
+	end if
+	return random_ip
+end function
+
+if params.len()<1 then
+    exit("<color=red>force [port]")
+end if
+
+while true
+	ip = random_ip
+	router = get_router(ip)
+	ports=router.used_ports
+	for port in ports
+		num = port.port_number
+		if num==to_int(params[0]) then
+			if params.len()>1 then
+				net=metaxploit.net_use(ip,to_int(params[0]))
+                if typeof(net)=="NetSession" then
+				    lib=net.dump_lib
+                    print(ip+" --> "+lib.lib_name+" v"+lib.version)
+                end if
+			else
+				print(ip+":"+port.port_number)
+			end if
+			else
+        end if
+	end for
+end while

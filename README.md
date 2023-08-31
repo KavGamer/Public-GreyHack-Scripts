@@ -1,2 +1,2 @@
 # Public-GreyHack-Scripts
- Collection of Scripts for the Game GreyHack
+    This is a collection of script I made for the game GreyHack you can use them or modify them if you want
